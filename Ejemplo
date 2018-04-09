@@ -1,0 +1,239 @@
+using System;
+using System.Collections.Generic;
+					
+public class Program
+{
+	public static void Main()
+	{
+		List<Usuario> usuarios = new List<Usuario>();
+		
+			
+	/** Menu **/
+	string _opcion = "";
+	Console.WriteLine("\t\tBienvenido");
+		
+	Inicio:
+		//Imprime el meni de manera ordenada
+		printMenu();
+			
+		
+		
+		/** Try catch(Transforma la letra capturada a mayuscula) **/
+	try{	
+		_opcion = Console.ReadLine().ToUpper();
+	}catch(FormatException){
+			Console.WriteLine("Error: Porfavor solo ingrese letras");
+		goto Inicio;
+	}
+	
+		//Switch con las opciones
+		switch(_opcion){
+		case "C":
+			//metodo de ingreso de datos
+			solicitarDatos(usuarios);
+			goto Inicio;
+			
+		case "R":
+			//metodo de despliegue de datos
+			mostrarDatos(usuarios);
+			goto Inicio;
+			
+		case "U":
+			//metodo de edicion del usuario
+			editarUsuario(usuarios);
+			goto Inicio;
+			
+		case "D":
+			//metodo para eliminar usuario
+			eliminarUsuario(usuarios);
+			goto Inicio;
+		case "E":
+			Console.WriteLine("Programa finalizado.");
+			break;
+			
+		default:
+			Console.WriteLine("Ingrese una de las opciones especificadas.");
+			goto Inicio;
+		
+		}
+		
+	}
+	
+	//Metodo de ingreso de un nuevo usuario
+	public static void solicitarDatos(List<Usuario> usuarios){
+		//VAriables y objetos a usar en el metodo (VYO)
+	Usuario u = new Usuario();
+	string _nombre;
+	string _apellido;
+	
+	//Imprime mensaje a los usuarios y captura los datos
+	Console.WriteLine("Ingrese nombre:");
+	_nombre = Console.ReadLine();
+	Console.WriteLine("Ingrese apellido:");
+	_apellido = Console.ReadLine();
+		
+	//asigna los datos capturados al objeto	
+	u.Nombre = _nombre;
+	u.Apellido = _apellido;
+		
+	//Intenta agregar un nuevo item a la lista de usuarios
+		try{
+	usuarios.Add(u);
+		}catch(Exception e)
+		{
+			Console.WriteLine("Se ha producido un error al ingresar el nuevo usuario{0}",e);	
+		}
+	Console.WriteLine("Datos ingresados correctamente");
+	}
+	
+	//Metodo de impresion de los usuarios
+	public static void mostrarDatos(List<Usuario> usuarios)
+	{
+		foreach(Usuario usuario in usuarios)
+		{
+			Console.WriteLine("ID:{0} Nombre de usuario:{1} ", usuarios.IndexOf(usuario),usuario.NombreCompleto);
+		}
+		
+	}
+	
+	
+	//Metodo de la edicion de los datos de usuario
+	public static void editarUsuario(List<Usuario> usuarios)
+		{
+			//1. Imprime el menu con los id de usuarios
+				mostrarDatos(usuarios);
+			//Muestra un mensaje al usuario
+				Console.WriteLine("Ingrese el ID del usuario a modificar: ");
+			
+			//Variables y objetos a usar en el metodo (VYO)
+				string _nombre;
+				string _apellido;
+				int _idUser = 0;
+					try
+					{
+						_idUser = Int32.Parse(Console.ReadLine());
+					}catch (FormatException e)
+					{
+						Console.WriteLine("Ingrese solo numeros. Error:{0}",e);
+					}
+				Usuario user = new Usuario();
+		
+			//Busca entre la lista de los usuarios por el ID ingresado por el usuario
+				foreach(Usuario usuario in usuarios)
+				{
+			//Compara si el index del usuario en la lista es igual al ID ingresado por el usuario
+					if((usuarios.IndexOf(usuario)) == _idUser)
+					{
+			//Asigna el objeto usuario actual a la instancia declarada anteriormente(VYO)
+						user = usuario;
+					}
+				}
+		
+		//Mostrar mensajes al usuario y capturar los nuevos valores
+				Console.WriteLine("Ingrese el nuevo nombre:");
+				_nombre = Console.ReadLine();
+				Console.WriteLine("Ingrese el nuevo apellido:");
+				_apellido = Console.ReadLine();
+		
+		//asigna los valores capturados al objeto usuario
+				user.Nombre = _nombre;
+				user.Apellido = _apellido;
+		
+		//Intenta eliminar y agregar en el mismo ID en la lista de usuarios
+		try{
+				usuarios.RemoveAt(_idUser);
+				usuarios.Insert(_idUser,user);
+		}catch(Exception e)
+		{
+			Console.WriteLine("Se ha producido un error al guardar los cambios. Error: {0}",e);	
+		}
+		//Si se imprime el mensaje el metodo termino exitosamente
+				Console.WriteLine("Datos modificados exitosamente");
+		}
+		
+	
+	//Metodo para eliminar usuarios
+	public static void eliminarUsuario(List<Usuario> usuarios){
+		//Declaracion de variables y objetos a usar (VYO)
+		int _idUser = 0;
+		
+		//Mostrar la lista de usuarios con sus IDs
+		mostrarDatos(usuarios);
+		
+		//Mostrar un mensaje al usuario y capturar el ID del usuario a eliminar
+		Console.WriteLine("Ingrese el ID del usuario a eliminar: ");
+		try{
+		//Captura el id del usuario a eliminar
+		_idUser = Int32.Parse(Console.ReadLine());
+		}catch(FormatException e)
+		{
+		//Muestra mensaje de error en caso de que el usuario ingrese letras
+			Console.WriteLine("ingrese solo numeros. Error: {0}",e);	
+		}
+		
+		//Intenta remover el usuario en base al ID que el usuario ingreso
+		try{
+			usuarios.RemoveAt(_idUser);
+		}catch(Exception e)
+		{
+			Console.WriteLine("Se ha producido un error al intentar eliminar el usuario especificado. Error: {0}",e);
+		}
+		
+		Console.WriteLine("Usuario eliminado");
+		
+		
+	}
+	
+	
+	
+	//Metodo que imprime el meu de manera ordenada
+	public static void printMenu(){
+		Console.WriteLine("\t\t\tMenu");
+		Console.WriteLine("\t----------------------");
+		Console.WriteLine("\t|Agregar usuario  = C|");
+		Console.WriteLine("\t|Listar usuarios  = R|");
+		Console.WriteLine("\t|Editar usuario   = U|");		
+		Console.WriteLine("\t|Eliminar usuario = D|");
+		Console.WriteLine("\t|--------------------|");
+		Console.WriteLine("\t|Salir            = E|");
+		Console.WriteLine("\t----------------------");	
+		Console.WriteLine("\tIngrese una letra:");	
+	}
+	
+		
+
+}
+
+public class Usuario{
+	private string _nombre;	
+	private string _apellido;
+	
+	public Usuario(){
+	}
+	
+	/*** Estilo Java ***/
+	
+	public string getNombre(){
+	return this._nombre;
+	}
+	
+	public void setNombre(string nombre){
+	this._nombre = nombre;
+	}
+	
+	/*** Estilo C# ***/
+	public string Nombre
+	{
+	 get { return this._nombre;}
+	 set { this._nombre = value;}
+	}
+	
+	public string Apellido{
+		get {return this._apellido;}
+		set {this._apellido = value;}
+	}
+	
+	public string NombreCompleto{
+		get {return this._nombre +" "+ this._apellido;}
+	}
+}
